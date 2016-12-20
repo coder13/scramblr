@@ -6,10 +6,14 @@ const yargs = require('yargs')
 const Scramblers = require('../').Scramblers;
 const args = yargs.argv;
 
+if (!args._[0]) {
+	return yargs.showHelp();
+}
+
 const scrambler = Scramblers.get(args._[0]);
 if (scrambler) {
 	scrambler.init();
-	console.log(scrambler.scramble());
+	console.log(scrambler.scramble(args._.slice(1)));
 }
 
 

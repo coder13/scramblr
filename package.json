@@ -7,8 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-      "scramble": "./index.js"
+    "scramble": "./bin/scramble"
   },
   "author": "= <=>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "yargs": "^6.4.0"
+  }
 }
