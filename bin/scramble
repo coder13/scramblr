@@ -1,34 +1,30 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-	.usage('Usage: scramble <type> [number]')
+  .usage('Usage: scramble <type> [number]')
+
+const readline = require('readline');
+
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
 
 const Scramblers = require('../').Scramblers;
 const args = yargs.argv;
 
 if (!args._[0]) {
-	return yargs.showHelp();
+  return yargs.showHelp();
 }
 
 const scrambler = Scramblers.get(args._[0]);
 if (scrambler) {
-	scrambler.init();
-	console.log(scrambler.scramble(args._.slice(1)));
+  scrambler.init();
+  console.log(scrambler.scramble(args._.slice(1)));
+
+  process.stdin.on('keypress', function (str, key) {
+    if (str === '\u0003') {
+      process.exit();
+    }
+    process.stdout.write(scrambler.scramble(args._.slice(1)) + '\n');
+  });
 }
 
-
-// var stdin = process.stdin;
-// stdin.setRawMode( true );
-// stdin.resume();
-// stdin.setEncoding( 'utf8' );
-
-// stdin.on( 'data', function(key) {
-// 		// ctrl-c ( end of text )
-// 		if (key === '\u0003') {
-// 			process.exit();
-// 		} else if (key === ' ') {
-//             process.stdout.write("\u001b[2J\u001b[0;0H");
-// 			console.log(MU());
-// 				// console.log(Scrambler.getCustomScramble(process.argv[2]));
-// 		}
-// });
