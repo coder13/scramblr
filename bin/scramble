@@ -1,42 +1,43 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs')
-  .usage('Usage: $0 <type> [number]')
-  .command('l', 'list scramblers')
-  .alias('list');
-
-const argv = yargs.argv;
-
 const Scramblers = require('../').Scramblers;
 
-if (argv.l) {
-  Scramblers.getAll().forEach(scrambler => {
-    console.log(scrambler.name, scrambler.description);
-  });
-  return;
-}
+require('yargs')
+  .command({
+    command: 'get <scrambler> [options]',
+    desc: 'Prints scrambles', 
+    handler: (argv) => {
+      const readline = require('readline');
+      
+      readline.emitKeypressEvents(process.stdin);
+      process.stdin.setRawMode(true);
 
-const readline = require('readline');
+      const scrambler = Scramblers.get(argv.scrambler);
+      if (!scrambler) {
+        console.error('Invalid scrambler');
+        return;
+      }
 
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
-
-const args = yargs.argv;
-
-if (!args._[0]) {
-  return yargs.showHelp();
-}
-
-const scrambler = Scramblers.get(args._[0]);
-if (scrambler) {
-  scrambler.init();
-  console.log(scrambler.scramble(args._.slice(1)));
-
-  process.stdin.on('keypress', function (str, key) {
-    if (str === '\u0003') {
-      process.exit();
+      scrambler.init();
+      console.log(scrambler.scramble(argv._.slice(2)));
+    
+      process.stdin.on('keypress', function (str, key) {
+        if (str === '\u0003') {
+          process.exit();
+        }
+        process.stdout.write(scrambler.scramble(argv._.slice(2)) + '\n');
+      });
     }
-    process.stdout.write(scrambler.scramble(args._.slice(1)) + '\n');
-  });
-}
-
+  })
+  .command({
+    command: 'list',
+    desc: 'list scramblers', 
+    handler: (argv) => {
+      Scramblers.getAll().forEach(scrambler => {
+        console.log(scrambler.name, scrambler.description);
+      });
+    }
+  })
+  .demandCommand()
+  .help()
+  .argv;
