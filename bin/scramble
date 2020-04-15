@@ -10,7 +10,7 @@ const argv = yargs.argv;
 const Scramblers = require('../').Scramblers;
 
 if (argv.l) {
-  Scramblers.scramblers.forEach(scrambler => {
+  Scramblers.getAll().forEach(scrambler => {
     console.log(scrambler.name, scrambler.description);
   });
   return;
