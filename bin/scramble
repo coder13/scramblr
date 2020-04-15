@@ -1,14 +1,26 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-  .usage('Usage: scramble <type> [number]')
+  .usage('Usage: $0 <type> [number]')
+  .command('l', 'list scramblers')
+  .alias('list');
+
+const argv = yargs.argv;
+
+const Scramblers = require('../').Scramblers;
+
+if (argv.l) {
+  Scramblers.scramblers.forEach(scrambler => {
+    console.log(scrambler.name, scrambler.description);
+  });
+  return;
+}
 
 const readline = require('readline');
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-const Scramblers = require('../').Scramblers;
 const args = yargs.argv;
 
 if (!args._[0]) {
