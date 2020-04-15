@@ -12,7 +12,17 @@ OR
 
 ## Usage:
 
-`scramble <type> [...args]`
+```bash
+scramble <command>
+
+Commands:
+  scramble get <scrambler> [options]  Prints scrambles
+  scramble list                       list scramblers
+
+Options:
+  --version  Show version number                                       [boolean]
+  --help     Show help                                                 [boolean]
+```
 
 ## Scrambles:
 
