@@ -12,6 +12,7 @@ require('yargs')
       readline.emitKeypressEvents(process.stdin);
       process.stdin.setRawMode(true);
 
+      Scramblers.setSeed(argv.seed);
       const scrambler = Scramblers.get(argv.scrambler);
       if (!scrambler) {
         console.error('Invalid scrambler');
@@ -28,6 +29,11 @@ require('yargs')
         process.stdout.write(scrambler.scramble(argv._.slice(2)) + '\n');
       });
     }
+  })
+  .option('seed', {
+    alias: 's',
+    type: 'number',
+    describe: 'Seed value used to generate repeatable scrambles'
   })
   .command({
     command: 'list',
